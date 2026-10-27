@@ -1,4 +1,4 @@
-# CineMatch AI 2.0
+# CineMatch AI
 
 CineMatch is a movie discovery and recommendation platform designed to help users explore films and find their next watch. The project brings together a React frontend and a Java Spring Boot backend, with PostgreSQL for data storage.
 
