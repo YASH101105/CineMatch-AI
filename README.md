@@ -1,8 +1,8 @@
-# CineMatch AI 2.0 🎬
+# CineMatch AI  🎬
 
 **Discover movies. Explore recommendations. Find your next favourite film.**
 
-CineMatch AI 2.0 is a movie discovery and recommendation platform built with React, Spring Boot, PostgreSQL, and The Movie Database (TMDB) API. The project combines a modern web interface with a Java REST API to help users search for movies and explore related recommendations.
+CineMatch AI  is a movie discovery and recommendation platform built with React, Spring Boot, PostgreSQL, and The Movie Database (TMDB) API. The project combines a modern web interface with a Java REST API to help users search for movies and explore related recommendations.
 
 The project is being developed to incorporate more personalized, AI-powered movie recommendations.
 
@@ -157,4 +157,4 @@ These endpoints return data from the backend, with TMDB supplying the movie info
 
 ## 📄 Disclaimer
 
-CineMatch AI 2.0 is an independent learning and development project. Movie metadata is provided through TMDB, subject to its applicable terms and attribution requirements.
+CineMatch AI is an independent learning and development project. Movie metadata is provided through TMDB, subject to its applicable terms and attribution requirements.
