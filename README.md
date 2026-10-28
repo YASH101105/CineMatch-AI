@@ -1,98 +1,221 @@
-# CineMatch AI
+CineMatch AI 2.0 🎬
 
-CineMatch is a movie discovery and recommendation platform designed to help users explore films and find their next watch. The project brings together a React frontend and a Java Spring Boot backend, with PostgreSQL for data storage.
+Discover movies. Explore recommendations. Find your next favourite film.
 
-## Features
+CineMatch AI 2.0 is a movie discovery and recommendation platform built with React, Spring Boot, PostgreSQL, and The Movie Database (TMDB) API. The project combines a modern web interface with a Java REST API to help users search for movies and explore related recommendations.
 
-- Browse and discover movies through a cinematic interface.
-- Search for movies by title (where the movie-data/API integration is configured).
-- View movie details and recommendations supported by the backend.
-- React-based frontend for an interactive user experience.
-- Spring Boot REST API architecture.
-- PostgreSQL database integration.
+The project is being developed to incorporate more personalized, AI-powered movie recommendations.
 
-> Features available in a running instance depend on the frontend and backend code and the configuration of any external movie-data API.
+✨ Features
 
-## Tech stack
+Movie Search: Search for movies by title using TMDB.
 
-| Layer | Technology |
-| --- | --- |
-| Frontend | React, JavaScript, CSS |
-| Backend | Java, Spring Boot |
-| Database | PostgreSQL |
-| API style | REST |
-| Frontend tooling | Node.js, npm (and Vite if configured in the frontend) |
-| Backend build | Maven (if configured in the backend) |
+Movie Details: Retrieve movie information from the backend API.
 
-## Getting started
+Movie Recommendations: Fetch recommendations for a selected movie.
 
-### Prerequisites
+Trending Movies: Support for retrieving trending movie data.
 
-Install the tools used by the project:
+Genre Discovery: Explore movies using genre-based discovery endpoints.
 
-- Node.js and npm
-- Java Development Kit (JDK)
-- PostgreSQL
-- Maven, if the backend uses Maven
+REST API Backend: Java Spring Boot services for handling movie-data requests.
 
-### 1. Configure the database
+Database Integration: PostgreSQL configuration for application data.
 
-Create a PostgreSQL database for CineMatch, then update the backend's local configuration with the database URL, username, and password.
+Modern Frontend: React and Vite for a responsive web experience.
 
-Keep credentials and API keys out of source control. Use environment variables or a local, untracked configuration file.
+Development status: Movie search and the TMDB recommendation endpoint have been tested successfully. Frontend integration, additional personalization, and AI-based recommendation features are ongoing development work.
 
-### 2. Run the backend
+🛠️ Tech Stack
 
-From the backend directory containing `pom.xml`, run:
+Layer
 
-```bash
+Technologies
+
+Frontend
+
+React, JavaScript, CSS
+
+Frontend tooling
+
+Vite, Node.js, npm
+
+Backend
+
+Java, Spring Boot
+
+API
+
+REST, TMDB API
+
+Database
+
+PostgreSQL
+
+Backend build tool
+
+Maven
+
+Version control
+
+Git and GitHub
+
+🏗️ Project Structure
+
+CineMatch-AI/
+├── backend/       # Spring Boot application and REST APIs
+├── frontend/      # React + Vite application
+├── docs/          # Project documentation
+├── .github/       # GitHub configuration
+├── .gitignore
+└── README.md
+
+🚀 Getting Started
+
+Prerequisites
+
+Install the following tools before running the project:
+
+Java JDK compatible with the project's Maven configuration
+
+Maven
+
+Node.js and npm
+
+PostgreSQL
+
+A TMDB account and API Read Access Token
+
+1. Clone the repository
+
+git clone https://github.com/YASH101105/CineMatch-AI-2.0.git
+cd CineMatch-AI-2.0
+
+Replace the repository URL if your GitHub repository uses a different name.
+
+2. Configure PostgreSQL
+
+Create a PostgreSQL database named cinematch_ai and configure a database user with the required permissions.
+
+The backend uses these environment variables:
+
+CINEMATCH_DB_USERNAME
+
+CINEMATCH_DB_PASSWORD
+
+TMDB_BEARER_TOKEN
+
+Make sure the database connection settings in the backend match your local PostgreSQL configuration.
+
+3. Start the backend
+
+Open a terminal in the project directory and run:
+
+cd backend
+
+export CINEMATCH_DB_USERNAME=cinematch_app
+
+read -s "CINEMATCH_DB_PASSWORD?Enter your PostgreSQL password: "
+export CINEMATCH_DB_PASSWORD
+echo
+
+read -s "TMDB_BEARER_TOKEN?Enter your TMDB Read Access Token: "
+export TMDB_BEARER_TOKEN
+echo
+
 mvn spring-boot:run
-```
 
-If the project includes the Maven wrapper, you can use `./mvnw spring-boot:run` instead.
+Keep this terminal open while using the application. The backend runs on port 8080 with the current local configuration.
 
-### 3. Run the frontend
+4. Start the frontend
 
-From the frontend directory containing `package.json`, run:
+Open a second terminal and run:
 
-```bash
+cd frontend
 npm install
 npm run dev
-```
 
-Use the local URL printed by the frontend development server. If the frontend and backend run on different ports, ensure the API base URL and backend CORS settings are configured correctly.
+Open the local URL displayed by Vite, typically:
 
-### 4. Build for production
+http://localhost:5173
 
-From the frontend directory:
+The current Vite configuration proxies /api requests to the backend at http://localhost:8080.
 
-```bash
+5. Build the frontend
+
+To verify that the frontend can be built for production:
+
+cd frontend
 npm run build
-```
 
-## Project structure
+The generated production files are placed in the dist directory.
 
-The exact directory names may differ depending on the current project files. A typical layout is:
+🔌 Backend API Endpoints
 
-```text
-CineMatch/
-├── frontend/       # React user interface
-├── backend/        # Spring Boot REST API
-└── README.md
-```
+The current backend includes these TMDB-related endpoints:
 
-## Security notes
+Method
 
-- Do not commit `.env` files containing secrets, passwords, or API keys.
-- Keep `node_modules/`, build output, and generated files out of Git.
-- Add project-specific setup details and screenshots as the application evolves.
+Endpoint
 
-## Author
+Purpose
 
-**Yash Rastogi**
+GET
 
-- GitHub: [@YASH101105](https://github.com/YASH101105)
+/api/health
 
----
+Check backend health
 
-CineMatch is a learning and development project. Update this README as features, setup steps, and integrations are finalized.
+GET
+
+/api/tmdb/search?query=Interstellar
+
+Search movies
+
+GET
+
+/api/tmdb/movie/{id}
+
+Retrieve movie details
+
+GET
+
+/api/tmdb/movie/{id}/recommendations
+
+Retrieve movie recommendations
+
+GET
+
+/api/tmdb/movie/{id}/images
+
+Retrieve movie images
+
+GET
+
+/api/tmdb/genres
+
+Retrieve available genres
+
+GET
+
+/api/tmdb/discover?genreId={id}
+
+Discover movies by genre
+
+GET
+
+/api/tmdb/trending
+
+Retrieve trending movies
+
+These endpoints return data from the backend, with TMDB supplying the movie information.
+
+🔐 Security
+
+Never commit TMDB access tokens, database passwords, or other credentials.
+
+Store secrets in environment variables or an untracked local environment file.
+
+Keep .env, build output, dependency folders, and IDE-specific files out of version control.
+
+If a credential is accidentally published, revoke or rotate it immediately.
