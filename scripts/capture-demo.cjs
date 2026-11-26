@@ -11,7 +11,7 @@ async function capture() {
     await page.getByRole('heading', { name: 'Signal at Dawn' }).waitFor()
     await mkdir('dist/screenshots', { recursive: true })
     await page.screenshot({ path: 'dist/screenshots/discovery.png', animations: 'disabled' })
-    await page.getByRole('button', { name: /Explore film/i }).click()
+    await page.getByRole('button', { name: /Explore film$/i }).click()
     await page.getByRole('heading', { name: 'Watch next' }).waitFor()
     await page.screenshot({ path: 'dist/screenshots/film-details.png', animations: 'disabled' })
     await page.getByLabel('Search movies').fill('Lantern')

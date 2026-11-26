@@ -6,6 +6,18 @@ CineMatch AI  is a movie discovery and recommendation platform built with React,
 
 The project is being developed to incorporate more personalized, AI-powered movie recommendations.
 
+## Live demo and screenshots
+
+[Open the interactive CineMatch demo](https://raw.githack.com/YASH101105/CineMatch-AI/gh-pages/index.html)
+
+Try searching for **Paper Lanterns**, browsing **Genres**, or opening **Signal at Dawn** to see related films. This preview runs the project’s React interface with six fictional films, original sample artwork, and example scores. The full application uses Spring Boot, PostgreSQL, and TMDB for live movie data and account features.
+
+| Discovery | Film details |
+| --- | --- |
+| ![CineMatch discovery screen showing Signal at Dawn](https://raw.githubusercontent.com/YASH101105/CineMatch-AI/gh-pages/screenshots/discovery.png) | ![CineMatch film details for Signal at Dawn](https://raw.githubusercontent.com/YASH101105/CineMatch-AI/gh-pages/screenshots/film-details.png) |
+
+GitHub Actions captures these screens in Chrome from the same build it publishes. To run the preview locally, use `npm ci` and `npm run dev -- --mode demo` in `frontend/`.
+
 ## ✨ Features
 
 - **Movie Search:** Search for movies by title using TMDB.
