@@ -1,0 +1,64 @@
+name: Frontend demo
+on:
+  pull_request:
+    paths: ['frontend/**', 'scripts/capture-demo.cjs', '.github/workflows/frontend-demo.yml']
+  push:
+    branches: [main]
+    paths: ['frontend/**', 'scripts/capture-demo.cjs', '.github/workflows/frontend-demo.yml']
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run build -- --mode demo --base ./
+      - name: Exercise the demo and capture its screens
+        run: |
+          npm install --prefix "$RUNNER_TEMP/demo-browser" --no-package-lock playwright-core@1.56.1
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          NODE_PATH="$RUNNER_TEMP/demo-browser/node_modules" node ../scripts/capture-demo.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cinematch-demo
+          path: frontend/dist
+  publish:
+    if: github.event_name == 'push'
+    needs: preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency: cinematch-demo-publish
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: cinematch-demo
+          path: ${{ runner.temp }}/cinematch-demo
+      - name: Publish the tested build and screenshots
+        run: |
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git switch --track origin/gh-pages
+            git rm -rf --ignore-unmatch assets screenshots index.html vite.svg
+          else
+            git switch --orphan gh-pages
+          fi
+          cp -R "$RUNNER_TEMP/cinematch-demo/." .
+          touch .nojekyll
+          git add .
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish demo for $GITHUB_SHA"
+            git push origin HEAD:gh-pages
+          fi
