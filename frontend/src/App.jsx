@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
+const demo = import.meta.env.MODE === 'demo'
 const API = '/api/tmdb'
-const POSTER = 'https://image.tmdb.org/t/p/w500'
-const BACKDROP = 'https://image.tmdb.org/t/p/w1280'
-const STILL = 'https://image.tmdb.org/t/p/w780'
+const POSTER = demo ? '' : 'https://image.tmdb.org/t/p/w500'
+const BACKDROP = demo ? '' : 'https://image.tmdb.org/t/p/w1280'
+const STILL = demo ? '' : 'https://image.tmdb.org/t/p/w780'
 
 function movieId(movie) {
   return Number(movie?.id ?? movie?.movieId ?? 0)
@@ -33,6 +34,10 @@ function normalizeMovie(movie) {
 }
 
 async function requestJson(url, options = {}) {
+  if (demo) {
+    const { sampleResponse } = await import('./sampleCatalog.js')
+    return sampleResponse(url, options.method)
+  }
   const retryable = !options.method || options.method.toUpperCase() === 'GET'
   const maxAttempts = retryable ? 3 : 1
 
@@ -327,7 +332,7 @@ function MovieDetail({
           </div>
           <h1>{movieTitle(activeMovie)}</h1>
           <div className="detail-meta">
-            <span className="tmdb-score">★ {Number(activeMovie?.vote_average || 0).toFixed(1)} <small>TMDB</small></span>
+            <span className="tmdb-score">★ {Number(activeMovie?.vote_average || 0).toFixed(1)} <small>{demo ? 'SAMPLE' : 'TMDB'}</small></span>
             {year && <span>{year}</span>}
             {details?.runtime > 0 && <span>{details.runtime} min</span>}
             {details?.original_language && <span>{details.original_language.toUpperCase()}</span>}
@@ -579,9 +584,14 @@ export default function App() {
     }
   }
 
+  function openAccount(mode) {
+    if (demo) setNotice('Accounts, favourites, ratings, and comments require the full CineMatch server.')
+    else setAuthView(mode)
+  }
+
   function navigate(nextView) {
     if ((nextView === 'favorites' || nextView === 'collection') && !user) {
-      setAuthView('login')
+      openAccount('login')
       return
     }
     setView(nextView)
@@ -658,7 +668,7 @@ export default function App() {
   async function toggleFavorite(rawMovie) {
     const movie = normalizeMovie(rawMovie)
     if (!user) {
-      setAuthView('login')
+      openAccount('login')
       return
     }
     const id = movieId(movie)
@@ -691,7 +701,7 @@ export default function App() {
 
   async function saveRating() {
     if (!user) {
-      setAuthView('login')
+      openAccount('login')
       return
     }
     if (!selected || draftRating < 1 || ratingBusy) return
@@ -715,7 +725,7 @@ export default function App() {
   async function submitComment(event) {
     event.preventDefault()
     if (!user) {
-      setAuthView('login')
+      openAccount('login')
       return
     }
     const content = commentDraft.trim()
@@ -905,7 +915,7 @@ export default function App() {
           onSaveRating={saveRating}
           onCommentDraftChange={(event) => setCommentDraft(event.target.value)}
           onSubmitComment={submitComment}
-          onSignIn={() => setAuthView('login')}
+          onSignIn={() => openAccount('login')}
           onShowScreenshot={(path) => path && setLightboxPath(path)}
         />
       )
@@ -988,7 +998,7 @@ export default function App() {
 
         <div className="sidebar-bottom">
           <div className="sidebar-note"><span>✦</span><p>A good film makes<br />the evening.</p></div>
-          {!user && !authLoading && <button className="sidebar-signin" type="button" onClick={() => setAuthView('login')}>Sign in to save films <span>↗</span></button>}
+          {!user && !authLoading && <button className="sidebar-signin" type="button" onClick={() => openAccount('login')}>Sign in to save films <span>↗</span></button>}
           {user && <button className="sidebar-signout" type="button" onClick={logOut}>Sign out <span>↗</span></button>}
         </div>
       </aside>
@@ -1011,18 +1021,19 @@ export default function App() {
           {user ? (
             <div className="top-account"><span className="account-avatar">{user.displayName.slice(0, 1).toUpperCase()}</span><span>{user.displayName}</span></div>
           ) : (
-            <button className="register-button" type="button" onClick={() => setAuthView('register')}>Register</button>
+            <button className="register-button" type="button" onClick={() => openAccount('register')}>Register</button>
           )}
         </header>
 
         <main className="content-area">
+          {demo && <div className="notice-bar">Interactive demo · Sample films and scores · No account required</div>}
           {notice && <div className="notice-bar" role="status">{notice}<button type="button" onClick={() => setNotice('')} aria-label="Dismiss">×</button></div>}
           {renderPage()}
         </main>
 
         <footer className="site-footer">
           <span>© CINEMATCH · A FILM CLUB FOR THE CURIOUS</span>
-          <span>FILM DATA & IMAGES BY TMDB</span>
+          <span>{demo ? 'ILLUSTRATIVE SAMPLE CATALOGUE' : 'FILM DATA & IMAGES BY TMDB'}</span>
         </footer>
       </div>
 
