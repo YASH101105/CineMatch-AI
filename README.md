@@ -149,6 +149,16 @@ These endpoints return data from the backend, with TMDB supplying the movie info
 - Keep `.env`, build output, dependency folders, and IDE-specific files out of version control.
 - If a credential is accidentally published, revoke or rotate it immediately.
 
+## Contributing
+
+Contributions are welcome! Read the [contribution guide](CONTRIBUTING.md), [code of conduct](CODE_OF_CONDUCT.md), [security policy](SECURITY.md), and [six-month roadmap](ROADMAP.md).
+
+See [open issues](https://github.com/YASH101105/CineMatch-AI/issues) for tasks. The project is in early development; feedback and reproducible bug reports are especially useful.
+
+## License
+
+Project code is available under the [MIT License](LICENSE). Third-party dependencies, TMDB metadata and imagery remain subject to their respective terms.
+
 ## 👨‍💻 Author
 
 **Yash Rastogi**

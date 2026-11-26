@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches: [main, oss-readiness]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: cinematch_ai
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci_user -d cinematch_ai"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      CINEMATCH_DB_USERNAME: ci_user
+      CINEMATCH_DB_PASSWORD: ci_password
+      TMDB_BEARER_TOKEN: test-placeholder-not-a-real-token
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - run: mvn -B verify
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
